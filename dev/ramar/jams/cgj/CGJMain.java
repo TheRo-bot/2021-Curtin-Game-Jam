@@ -7,10 +7,14 @@ import dev.ramar.e2.rendering.*;
 import dev.ramar.e2.rendering.drawing.stateless.RectDrawer.RectMods;
 import dev.ramar.e2.structures.WindowSettings;
 
+import dev.ramar.e2.rendering.drawing.stateful.TextShape;
 
+import dev.ramar.jams.cgj.guis.*;
 
 import java.util.*;
+import java.io.*;
 
+import dev.ramar.e2.rendering.drawing.stateful.*;
 
 public class CGJMain
 {
@@ -36,101 +40,34 @@ public class CGJMain
         vp.start();
 
 
-        vp.guis.requestGUI(new GUI()
+        try
         {
-            @Override
-            public boolean requestAccess(GUI g)
-            {
-                return true;
+            /* PRE-GAME CACHING */
+            vp.draw.image.loadToCache(getClass(), "/resources/textures/walls/wall.png", "walls.generic.south");
 
-            }
-
-            @Override
-            public void prepSwapTo(GUI g)
-            {
-
-            }
-
-
-            public void initiateGUI(ViewPort vp)
-            {
-                super.initiateGUI(vp);
-                viewport.draw.stateless.perm.add((double x, double y, ViewPort thisVP) ->
-                {
-                    thisVP.draw.stateless.rect.withMod().withColour(255, 255, 0, 255).withFill();
-                    thisVP.draw.stateless.rect.poslen(30, 30, 20, 20);
-                });
-            }
-
-        });
-
-        GUI[] guis = new GUI[]
-        {   
-            new GUI()
-            {
-                @Override
-                public boolean requestAccess(GUI g)
-                {
-                    return true;
-                }
-
-                @Override
-                public void prepSwapTo(GUI g)
-                {
-
-                }
-
-
-                public void initiateGUI(ViewPort vp)
-                {
-                    super.initiateGUI(vp);
-                    viewport.draw.stateless.perm.add((double x, double y, ViewPort thisVP) ->
-                    {
-                        thisVP.draw.stateless.rect.withMod().withColour(255, 255, 0, 255).withFill();
-                        thisVP.draw.stateless.rect.poslen(30, 30, 20, 20);
-                    });
-                }
-            }, 
-            new GUI()
-            {
-                @Override
-                public boolean requestAccess(GUI g)
-                {
-                    return true;
-                }
-
-                @Override
-                public void prepSwapTo(GUI g)
-                {
-
-                }
-
-
-                public void initiateGUI(ViewPort vp)
-                {
-                    super.initiateGUI(vp);
-                    viewport.draw.stateless.perm.add((double x, double y, ViewPort thisVP) ->
-                    {
-                        thisVP.draw.stateless.rect.withMod().withColour(255, 0, 255, 255).withFill();
-                        thisVP.draw.stateless.rect.poslen(30, 30, 20, 20);
-                    });
-                }
-            }
-        };
-
-        while(true)
-        {
-            for( int ii = 0; ii < guis.length; ii++ )
-            {
-                vp.guis.requestGUI(guis[ii]);
-                try
-                {
-                    Thread.sleep(1500);
-                }
-                catch(InterruptedException e)
-                {}
-            }
         }
+        catch(IOException e) 
+        {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
+        /*
+        Game starting!
+        */
+
+        GameGUI gg = new GameGUI();
+        SyncPointMaker spm = new SyncPointMaker();
+
+        vp.guis.requestGUI(spm);
+
+        Tests tests = new Tests();
+
+        tests.setup(vp, gg.fum);
+
+        // tests.scaleTest(vp.window.width(), vp.window.height());
 
 	}
 

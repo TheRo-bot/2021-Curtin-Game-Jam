@@ -21,7 +21,7 @@ public class Main
     /* Static Constructor */
     private static void onSetup()
     {
-        CGJMain.setup();
+        dev.ramar.jams.cgj.CGJMain.setup();
     }
 
 
